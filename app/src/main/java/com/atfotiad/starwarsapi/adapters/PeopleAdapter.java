@@ -1,12 +1,16 @@
 package com.atfotiad.starwarsapi.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.atfotiad.starwarsapi.FilmsActivity;
 import com.atfotiad.starwarsapi.databinding.CharacterRowBinding;
 import com.atfotiad.starwarsapi.model.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -33,6 +37,16 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleHold
         Result currentCharacter = charactersList.get(position);
         holder.rowBinding.charName.setText(currentCharacter.getName());
         holder.rowBinding.gender.setText(currentCharacter.getGender());
+        holder.rowBinding.charCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FilmsActivity.class);
+                intent.putExtra("name",currentCharacter.getName());
+                intent.putStringArrayListExtra("films",(ArrayList<String>) currentCharacter.getFilms());
+
+                context.startActivity(intent);
+            }
+        });
 
 
     }

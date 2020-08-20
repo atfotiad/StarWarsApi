@@ -3,4 +3,6 @@
     <string name="characters">Characters</string>
     <string name="sample_name">sample name</string>
     <string name="sample_gender">sample gender</string>
+    <string name="sample_year">sample year</string>
+    <string name="year">year</string>
 </resources>

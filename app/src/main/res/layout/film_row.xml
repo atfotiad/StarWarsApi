@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/charCard"
+    android:id="@+id/filmCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
@@ -12,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/charName"
+            android:id="@+id/filmName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sample_name"
@@ -24,14 +24,13 @@
 
         <TextView
 
-            android:id="@+id/gender"
+            android:id="@+id/year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sample_gender"
+            android:text="@string/year"
             android:textAlignment="textEnd"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>
