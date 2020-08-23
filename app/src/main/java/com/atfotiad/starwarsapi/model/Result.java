@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+
 public class Result {
 
     @SerializedName("name")
@@ -183,4 +186,17 @@ public class Result {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public static final DiffUtil.ItemCallback<Result> callback = new DiffUtil.ItemCallback<Result>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Result oldItem, @NonNull Result newItem) {
+            return oldItem.getUrl().equals(newItem.getUrl());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Result oldItem, @NonNull Result newItem) {
+            return oldItem.getName().equals(newItem.getName());
+        }
+    };
+
 }

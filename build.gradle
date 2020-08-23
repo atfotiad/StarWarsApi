@@ -23,7 +23,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
-    paging_version = "1.0.0"
+    paging_version = "2.1.2"
     archLifecycleVersion = '2.2.0'
     coreTestingVersion = '2.1.0'
     materialVersion = '1.2.0'

@@ -44,6 +44,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.archLifecycleVersion"
     implementation "com.google.android.material:material:$rootProject.materialVersion"
 
+    implementation "androidx.paging:paging-runtime:$rootProject.paging_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
