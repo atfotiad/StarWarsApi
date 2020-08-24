@@ -14,7 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PeopleDataSource extends PageKeyedDataSource<Integer,Result> {
+public class PeopleDataSource extends PageKeyedDataSource<Integer, People> {
     ApiInterface apiInterface;
     Application application;
 
@@ -24,13 +24,13 @@ public class PeopleDataSource extends PageKeyedDataSource<Integer,Result> {
     }
 
     @Override
-    public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, Result> callback) {
+    public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, People> callback) {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<SwapiResponse> fetchPeople = apiInterface.getAllCharacters(1);
 
         fetchPeople.enqueue(new Callback<SwapiResponse>() {
             @Override
-            public void onResponse(Call<SwapiResponse> call, Response<SwapiResponse> response) {
+            public void onResponse(@NonNull Call<SwapiResponse> call,@NonNull Response<SwapiResponse> response) {
                 if (!response.isSuccessful()){
                     Log.e("Code:", String.valueOf(+ response.code()));
                     return;
@@ -39,13 +39,14 @@ public class PeopleDataSource extends PageKeyedDataSource<Integer,Result> {
                 SwapiResponse jsonResponse = response.body();
 
                 assert jsonResponse != null;
-                ArrayList<Result> characters = (ArrayList<Result>) jsonResponse.getResults();
+                ArrayList<People> characters = (ArrayList<People>) jsonResponse.getPeople();
 
                 callback.onResult(characters,null,2);
             }
 
             @Override
-            public void onFailure(Call<SwapiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<SwapiResponse> call, @NonNull Throwable t) {
+                Log.e("From DataSource", "onFailure: " + t.getMessage());
 
             }
         });
@@ -53,18 +54,18 @@ public class PeopleDataSource extends PageKeyedDataSource<Integer,Result> {
     }
 
     @Override
-    public void loadBefore(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Result> callback) {
+    public void loadBefore(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, People> callback) {
 
     }
 
     @Override
-    public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Result> callback) {
+    public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, People> callback) {
 
         Call<SwapiResponse> fetchPeople = apiInterface.getAllCharacters(params.key);
 
         fetchPeople.enqueue(new Callback<SwapiResponse>() {
             @Override
-            public void onResponse(Call<SwapiResponse> call, Response<SwapiResponse> response) {
+            public void onResponse(@NonNull Call<SwapiResponse> call, @NonNull Response<SwapiResponse> response) {
                 if (!response.isSuccessful()){
                     Log.e("Code:", String.valueOf(+ response.code()));
                     return;
@@ -73,13 +74,14 @@ public class PeopleDataSource extends PageKeyedDataSource<Integer,Result> {
                 SwapiResponse jsonResponse = response.body();
 
                 assert jsonResponse != null;
-                ArrayList<Result>  characters = (ArrayList<Result>) jsonResponse.getResults();
+                ArrayList<People>  characters = (ArrayList<People>) jsonResponse.getPeople();
 
                 callback.onResult(characters,params.key+1);
             }
 
             @Override
-            public void onFailure(Call<SwapiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<SwapiResponse> call, @NonNull Throwable t) {
+                Log.e("From DataSource", "onFailure: " + t.getMessage());
 
             }
         });

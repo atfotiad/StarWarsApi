@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 
-public class PeopleDataSourceFactory extends DataSource.Factory{
+public class PeopleDataSourceFactory extends DataSource.Factory<Integer, People>{
 
     private ApiInterface apiInterface;
     private Application application;
@@ -22,7 +22,7 @@ public class PeopleDataSourceFactory extends DataSource.Factory{
 
     @NonNull
     @Override
-    public DataSource create() {
+    public DataSource<Integer, People> create() {
 
         PeopleDataSource peopleDataSource = new PeopleDataSource(apiInterface, application);
         mutableLiveData.postValue(peopleDataSource);

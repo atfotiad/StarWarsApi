@@ -3,92 +3,84 @@ package com.atfotiad.starwarsapi.repository;
 import android.app.Application;
 import android.util.Log;
 
-import com.atfotiad.starwarsapi.adapters.PeopleAdapter;
-import com.atfotiad.starwarsapi.databinding.ActivityMainBinding;
-import com.atfotiad.starwarsapi.model.Result;
-import com.atfotiad.starwarsapi.model.SwapiResponse;
+import com.atfotiad.starwarsapi.model.People;
+import com.atfotiad.starwarsapi.model.PeopleDataSource;
+import com.atfotiad.starwarsapi.model.PeopleDataSourceFactory;
 import com.atfotiad.starwarsapi.retrofit.ApiClient;
 import com.atfotiad.starwarsapi.retrofit.ApiInterface;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import androidx.lifecycle.LiveData;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 public class Repository{
-    private ArrayList<Result> allCharacters = null;
-    private ArrayList<Result> nextPage = null;
-    private Retrofit apiService;
-    private Application application;
+
+
+    LiveData<PeopleDataSource> peopleDataSourceLiveData;
+    private LiveData<PagedList<People>> peoplePagedList;
 
 
     public Repository(Application application){
-        this.application = application;
-        apiService = ApiClient.getClient();
 
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        PeopleDataSourceFactory peopleDataSourceFactory = new PeopleDataSourceFactory(apiInterface,application);
+        peopleDataSourceLiveData = peopleDataSourceFactory.getMutableLiveData();
+
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setInitialLoadSizeHint(20)
+                .setPageSize(10)
+                .setPrefetchDistance(50)
+                .build();
+
+        Executor executor = Executors.newFixedThreadPool(4);
+
+        peoplePagedList = new LivePagedListBuilder<>(peopleDataSourceFactory, config)
+                .setFetchExecutor(executor)
+                .build();
 
     }
-    public void getAllCharacters(PeopleAdapter peopleAdapter, ActivityMainBinding binding, int page){
-        ApiInterface request =apiService.create(ApiInterface.class);
-        Call<SwapiResponse> fetchPeople = request.getAllCharacters(page);
-        fetchPeople.enqueue(new Callback<SwapiResponse>() {
-            @Override
-            public void onResponse(Call<SwapiResponse> call, Response<SwapiResponse> response) {
-                if (!response.isSuccessful()){
-                    Log.e("Code:", String.valueOf(+ response.code()));
-                    return;
-                }
-                SwapiResponse jsonResponse = response.body();
-                assert jsonResponse != null;
-                allCharacters = (ArrayList<Result>) jsonResponse.getResults();
-                for (int i=0 ; i<allCharacters.size();i++){
-                    Log.d("Repo", "onResponse: "+ jsonResponse.getResults().get(i).getName());
-                }
-               // peopleAdapter.addCharacters(allCharacters);
-                Log.d("Item count", "onResponse: "+peopleAdapter.getItemCount());
 
+    public LiveData<PagedList<People>> getPeoplePagedList() {
+        return peoplePagedList;
+    }
 
-            }
+    public List<String> getFilmNames(List<String> films){
+        ArrayList<String> newFilms = new ArrayList<>();
+        for (String film :films ){
+            String name = getNameFromUrl(film);
+            Log.d("from names", "getFilmNameFromUrl: "+ name);
+            newFilms.add(name);
 
-            @Override
-            public void onFailure(Call<SwapiResponse> call, Throwable t) {
-                Log.e("From Repo", "onFailure: " + t.getMessage());
+        }
+        return newFilms;
+    }
 
-            }
-        });
+    public String getNameFromUrl(String film){
+        char filmId = film.charAt(film.length() - 2);
 
-        /*
+        switch (filmId){
+            case '1':
+                return  "Star Wars Episode IV A New Hope";
+            case '2':
+                return  "Star Wars Episode V The Empire Strikes Back";
+            case '3':
+                return  "Star Wars Episode VI Return of the Jedi";
+            case '4':
+                return  "Star Wars Episode I The Phantom Menace";
+            case '5':
+                return "Star Wars Episode II Attack of the Clones";
+            case '6':
+                return "Star Wars Episode III Revenge of the Sith";
+            default:
+                return null;
+        }
 
-        //page++;
-        Call <SwapiResponse> fetchSecondPage = request.getAllCharacters(2);
-        fetchSecondPage.enqueue(new Callback<SwapiResponse>() {
-            @Override
-            public void onResponse(Call<SwapiResponse> call, Response<SwapiResponse> response) {
-                if (!response.isSuccessful()){
-                    Log.e("Code:", String.valueOf(+ response.code()));
-                    return;
-                }
-                SwapiResponse jsonResponse = response.body();
-                assert jsonResponse != null;
-                nextPage = (ArrayList<Result>) jsonResponse.getResults();
-                for (int i=0 ; i<nextPage.size();i++){
-                    Log.d("Repo", "onResponse: "+ jsonResponse.getResults().get(i).getName());
-                }
-                peopleAdapter.addCharacters(nextPage);
-                Log.d("Item count", "onResponse: "+peopleAdapter.getItemCount());
-
-            }
-
-            @Override
-            public void onFailure(Call<SwapiResponse> call, Throwable t) {
-                Log.e("From Repo", "onFailure: " + t.getMessage());
-
-            }
-        });
-
-*/
     }
 
 }

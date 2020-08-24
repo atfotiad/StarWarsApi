@@ -38,10 +38,6 @@ public class FilmsAdapter extends RecyclerView.Adapter<FilmsAdapter.FilmsHolder>
         else return 0;
     }
 
-    public void setFilms(List<String> films) {
-        this.films = films;
-        notifyDataSetChanged();
-    }
 
     public static class FilmsHolder extends RecyclerView.ViewHolder {
         private FilmRowBinding rowBinding;
