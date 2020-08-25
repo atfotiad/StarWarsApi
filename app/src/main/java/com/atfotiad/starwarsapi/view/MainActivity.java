@@ -1,17 +1,20 @@
-package com.atfotiad.starwarsapi;
+package com.atfotiad.starwarsapi.view;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.atfotiad.starwarsapi.adapters.PeopleAdapter;
 import com.atfotiad.starwarsapi.databinding.ActivityMainBinding;
 import com.atfotiad.starwarsapi.model.People;
 import com.atfotiad.starwarsapi.retrofit.ApiClient;
 import com.atfotiad.starwarsapi.retrofit.ApiInterface;
+import com.atfotiad.starwarsapi.viewmodel.PeopleViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mainBinding;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ApiInterface apiInterface;
     LinearLayoutManager linearLayoutManager;
     PagedList<People> charactersList;
+    SwipeRefreshLayout refreshLayout;
 
 
     @Override
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mainBinding.getRoot());
         initialize();
         getPeople();
+        getNetwork();
     }
 
     protected void initialize(){
@@ -41,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.allCharacters.setAdapter(peopleAdapter);
         mainBinding.allCharacters.setHasFixedSize(true);
 
+        refreshLayout = mainBinding.swipeRefresh;
+        refreshLayout.setOnRefreshListener(() -> {
+            peopleViewModel.refresh();
+            getPeople();
+            refreshLayout.setRefreshing(false);
+            mainBinding.allCharacters.setAdapter(peopleAdapter);
+            mainBinding.networkState.setVisibility(View.GONE);
+
+
+        });
+
     }
 
     protected  void getPeople(){
@@ -49,5 +65,12 @@ public class MainActivity extends AppCompatActivity {
             peopleAdapter.submitList(charactersList);
         });
 
+    }
+
+    protected void getNetwork(){
+        peopleViewModel.getNetworkState().observe(this, s -> {
+            mainBinding.networkState.setText(s);
+            mainBinding.networkState.setVisibility(View.VISIBLE);
+        });
     }
 }

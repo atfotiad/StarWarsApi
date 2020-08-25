@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.atfotiad.starwarsapi.FilmsActivity;
+import com.atfotiad.starwarsapi.view.FilmsActivity;
 import com.atfotiad.starwarsapi.databinding.CharacterRowBinding;
 import com.atfotiad.starwarsapi.model.People;
 

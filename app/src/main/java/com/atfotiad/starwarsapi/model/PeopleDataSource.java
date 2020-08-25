@@ -9,6 +9,7 @@ import com.atfotiad.starwarsapi.retrofit.ApiInterface;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PageKeyedDataSource;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,10 +18,14 @@ import retrofit2.Response;
 public class PeopleDataSource extends PageKeyedDataSource<Integer, People> {
     ApiInterface apiInterface;
     Application application;
+    MutableLiveData <String>networkState;
+
 
     public PeopleDataSource(ApiInterface apiInterface, Application application) {
         this.apiInterface = apiInterface;
         this.application = application;
+        networkState = new MutableLiveData<>();
+
     }
 
     @Override
@@ -47,6 +52,7 @@ public class PeopleDataSource extends PageKeyedDataSource<Integer, People> {
             @Override
             public void onFailure(@NonNull Call<SwapiResponse> call, @NonNull Throwable t) {
                 Log.e("From DataSource", "onFailure: " + t.getMessage());
+                networkState.postValue(t.getMessage()+"\nPlease connect to the internet and swipe down to refresh");
 
             }
         });
@@ -82,9 +88,14 @@ public class PeopleDataSource extends PageKeyedDataSource<Integer, People> {
             @Override
             public void onFailure(@NonNull Call<SwapiResponse> call, @NonNull Throwable t) {
                 Log.e("From DataSource", "onFailure: " + t.getMessage());
+                networkState.postValue(t.getMessage() +"\nPlease connect to the internet and swipe down to refresh");
 
             }
         });
 
     }
+    public MutableLiveData <String> getNetworkState(){
+        return networkState;
+    }
+
 }

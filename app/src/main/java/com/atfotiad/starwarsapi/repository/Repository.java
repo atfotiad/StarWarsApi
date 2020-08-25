@@ -15,6 +15,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
@@ -23,18 +24,23 @@ public class Repository{
 
     LiveData<PeopleDataSource> peopleDataSourceLiveData;
     private LiveData<PagedList<People>> peoplePagedList;
+    PeopleDataSourceFactory peopleDataSourceFactory;
+    public LiveData<String> networkState;
 
 
     public Repository(Application application){
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        PeopleDataSourceFactory peopleDataSourceFactory = new PeopleDataSourceFactory(apiInterface,application);
+        peopleDataSourceFactory = new PeopleDataSourceFactory(apiInterface,application);
         peopleDataSourceLiveData = peopleDataSourceFactory.getMutableLiveData();
+        networkState = Transformations.switchMap(peopleDataSourceFactory.getMutableLiveData(), PeopleDataSource::getNetworkState);
+
+
 
         PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(true)
-                .setInitialLoadSizeHint(20)
-                .setPageSize(10)
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(14*4)
+                .setPageSize(14)
                 .setPrefetchDistance(50)
                 .build();
 
@@ -44,6 +50,13 @@ public class Repository{
                 .setFetchExecutor(executor)
                 .build();
 
+    }
+    public void refresh(){
+        peopleDataSourceFactory.refresh();
+    }
+
+    public LiveData<String> getNetworkState(){
+        return networkState;
     }
 
     public LiveData<PagedList<People>> getPeoplePagedList() {

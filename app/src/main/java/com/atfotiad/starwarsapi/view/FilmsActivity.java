@@ -1,9 +1,10 @@
-package com.atfotiad.starwarsapi;
+package com.atfotiad.starwarsapi.view;
 
 import android.os.Bundle;
 
 import com.atfotiad.starwarsapi.adapters.FilmsAdapter;
 import com.atfotiad.starwarsapi.databinding.ActivityFilmsBinding;
+import com.atfotiad.starwarsapi.viewmodel.FilmsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

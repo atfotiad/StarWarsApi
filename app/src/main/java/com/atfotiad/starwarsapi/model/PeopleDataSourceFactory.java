@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.atfotiad.starwarsapi.retrofit.ApiInterface;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
@@ -32,4 +34,9 @@ public class PeopleDataSourceFactory extends DataSource.Factory<Integer, People>
     public MutableLiveData<PeopleDataSource> getMutableLiveData() {
         return mutableLiveData;
     }
+
+    public void refresh(){
+        Objects.requireNonNull(mutableLiveData.getValue()).invalidate();
+    }
+
 }

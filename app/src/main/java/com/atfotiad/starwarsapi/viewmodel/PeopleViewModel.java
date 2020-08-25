@@ -1,4 +1,4 @@
-package com.atfotiad.starwarsapi;
+package com.atfotiad.starwarsapi.viewmodel;
 
 import android.app.Application;
 
@@ -24,4 +24,8 @@ public class PeopleViewModel extends AndroidViewModel {
     public LiveData<PagedList<People>> getPeoplePagedList() {
         return repository.getPeoplePagedList();
     }
+    public void refresh(){
+        repository.refresh();
+    }
+    public LiveData<String> getNetworkState(){return repository.getNetworkState();}
 }

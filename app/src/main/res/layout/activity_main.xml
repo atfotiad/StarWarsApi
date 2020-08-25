@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <TextView
         android:id="@+id/characters"
@@ -18,18 +18,39 @@
         app:layout_constraintVertical_bias="0.05"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"/>
-    
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="8dp"
-        android:id="@+id/allCharacters"
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/characters"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.03"
-        tools:listitem="@layout/character_row">
+        app:layout_constraintVertical_bias="0.03">
 
-    </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="8dp"
+            android:id="@+id/allCharacters"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/character_row">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/networkState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toBottomOf="@id/characters"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:gravity="center_horizontal">
+
+    </TextView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

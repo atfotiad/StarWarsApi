@@ -1,4 +1,4 @@
-package com.atfotiad.starwarsapi;
+package com.atfotiad.starwarsapi.viewmodel;
 
 import android.app.Application;
 
